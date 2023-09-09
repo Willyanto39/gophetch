@@ -17,23 +17,13 @@ func DisplaySystemInformation() {
 }
 
 func displayComputerModelInformation() {
-	modelInformation, err := os.ReadFile("/sys/devices/virtual/dmi/id/product_version")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
+	modelInformation := readFile("/sys/devices/virtual/dmi/id/product_version")
 
 	display("Model", strings.Replace(string(modelInformation), "\n", "", -1))
 }
 
 func displayDistroInformation() {
-	osInformation, err := os.ReadFile("/etc/os-release")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
+	osInformation := readFile("/etc/os-release")
 
 	for _, v := range strings.Split(string(osInformation), "\n") {
 		keyValuePair := strings.Split(v, "=")
@@ -46,25 +36,14 @@ func displayDistroInformation() {
 }
 
 func displayKernelInformation() {
-	kernelInformation, err := os.ReadFile("/proc/version")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
-
+	kernelInformation := readFile("/proc/version")
 	informationList := strings.Split(string(kernelInformation), " ")
 
-	display("Kernel", informationList[0] + " " + informationList[2])
+	display("Kernel", informationList[0]+" "+informationList[2])
 }
 
 func displayCpuInformation() {
-	cpuInformation, err := os.ReadFile("/proc/cpuinfo")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
+	cpuInformation := readFile("/proc/cpuinfo")
 
 	for _, v := range strings.Split(string(cpuInformation), "\n") {
 		keyValuePair := strings.Split(v, ":")
@@ -77,12 +56,7 @@ func displayCpuInformation() {
 }
 
 func displayMemoryInformation() {
-	memoryInformation, err := os.ReadFile("/proc/meminfo")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
+	memoryInformation := readFile("/proc/meminfo")
 
 	for _, v := range strings.Split(string(memoryInformation), "\n") {
 		keyValuePair := strings.Split(v, ":")
@@ -110,9 +84,20 @@ func getEnvironmentValue(environment string) string {
 	// split value by "/" in case of getting shell name
 	splitValues := strings.Split(value, "/")
 
-	return splitValues[len(splitValues) - 1]
+	return splitValues[len(splitValues)-1]
 }
 
 func display(label, value string) {
 	fmt.Println(fmt.Sprintf("\x1b[1;37m%s\x1b[0m: %s", label, value))
+}
+
+func readFile(filename string) string {
+	fileContent, err := os.ReadFile(filename)
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(0)
+	}
+
+	return string(fileContent)
 }
