@@ -1,0 +1,11 @@
+{
+    "informations": [
+        "computer_model",
+        "distro",
+        "kernel",
+        "cpu",
+        "memory",
+        "shell",
+        "desktop_environment"
+    ]
+}

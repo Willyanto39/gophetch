@@ -7,13 +7,20 @@ import (
 )
 
 func DisplaySystemInformation() {
-	displayComputerModelInformation()
-	displayDistroInformation()
-	displayKernelInformation()
-	displayCpuInformation()
-	displayMemoryInformation()
-	displayDesktopEnvironmentInformation()
-	displayShellInformation()
+	config := LoadConfiguration()
+	functionMap := map[string]func(){
+		"computer_model":      displayComputerModelInformation,
+		"distro":              displayDistroInformation,
+		"kernel":              displayKernelInformation,
+		"cpu":                 displayCpuInformation,
+		"memory":              displayMemoryInformation,
+		"shell":               displayShellInformation,
+		"desktop_environment": displayDesktopEnvironmentInformation,
+	}
+
+	for _, v := range config.Informations {
+		functionMap[v]()
+	}
 }
 
 func displayComputerModelInformation() {
