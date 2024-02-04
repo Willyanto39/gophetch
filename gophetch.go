@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+
+	"github.com/Willyanto39/gophetch/config"
+	"github.com/Willyanto39/gophetch/system"
 )
 
 func checkOs() {
@@ -15,5 +18,9 @@ func checkOs() {
 
 func main() {
 	checkOs()
-	DisplaySystemInformation()
+	config := config.LoadConfiguration()
+	systemInformations := system.GetSystemInformation(config)
+	for _, systemInformation := range systemInformations {
+		fmt.Println(systemInformation)
+	}
 }
